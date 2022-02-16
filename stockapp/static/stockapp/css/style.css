@@ -1,0 +1,79 @@
+.not-visible{
+	display: none;
+}
+
+
+body{
+	font-size: 16px;
+	line-height: 1.6em;
+	margin: 0;
+	background-color: #272829;
+	color: #A2C5C6;
+}
+
+.container{
+	width: 80%;
+	margin: auto;
+	overflow: hidden;
+	text-align: left;
+}
+
+.market{
+	text-align: center;
+}
+
+.navbar-custom{
+	background-color: #A2C5C6;
+	color: #272829;
+}
+.navbar .navbar-toggler .navbar-toggler-icon {
+  background: #272829 !important;
+}
+
+.button-link {
+	color: #A2C5C6;
+	text-decoration: none;
+}
+
+input{
+	background-color: #FFFFFF;
+	color: #272829;
+	border: 2px solid #272829;
+  	border-radius: 4px;
+}
+}
+table{
+	margin-left: auto;
+	margin-right: auto;
+}
+
+td{
+	text-align: center;
+}
+
+th{
+	text-align: center;
+}
+
+input:read-only {
+  background-color: black;
+  color: white;
+  text-align: center
+}
+
+a{
+	color: white;
+	text-decoration: none;
+}
+
+.btn-group button{
+	border: 1px solid black; 
+}
+
+th{
+	background-color: #DFDAC4;
+}
+
+.card-deck .card {
+  min-width: 220px;
+}

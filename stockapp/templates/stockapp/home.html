@@ -1,0 +1,83 @@
+{% extends 'stockapp/base.html' %}
+
+{% block content %}
+
+{% load dollarformat %}
+
+  <div class="market">
+    <h2>Market At A Glance</h2>
+    <div class="row">
+      {% for index in indexes %}
+      <div class="col-lg-4">
+
+        {% if index.change > 0 %}
+        <svg xmlns="http://www.w3.org/2000/svg" width="100" height="124" fill="currentColor" class="bi bi-arrow-up-circle-fill" viewBox="0 0 16 16">
+  <path d="M16 8A8 8 0 1 0 0 8a8 8 0 0 0 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z"/>
+</svg>
+        {% else %}
+        <svg xmlns="http://www.w3.org/2000/svg" width="100" height="124" fill="currentColor" class="bi bi-arrow-down-circle-fill" viewBox="0 0 16 16">
+  <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z"/>
+</svg>
+        {% endif %}
+        <h2>{{ index.Ticker }}</h2>
+        <h5>{{ index.ask|dollar_format }}</h5>
+        <h5>{{ index.change|floatformat:2 }}%</h5>
+      </div><!-- /.col-lg-4 -->
+  {% endfor %}
+    </div><!-- /.row -->
+  </div>
+
+  <hr>
+
+  <h2>Market Headlines</h2>
+	<div class="row">
+			<div>
+        {% if articles %}
+          {% for article in articles %}
+            <h4>{{ article.title }}</h4>
+            <p><em>{{ article.content }}</em></p>
+              {{ article.author }} | {{ article.source }} | {{ article.date }} | <a href="{{ article.url }}" target="_blank">Read More</a>
+          <hr>
+          {% endfor %}
+        {% endif %}
+      </div>
+	</div>
+
+	<div class="leaderboard">
+		<h3>Portfolio Leaderboard</h3>
+    <div class="table-responsive">
+			<table class="table table-bordered table-hover table-dark">
+				<thead>
+					<tr>
+					  <th scope="col">Name</th>
+					  <th scope="col">Created By</th>
+					  <th scope="col">Date Created</th>
+					  <th scope="col">Starting Value</th>
+					  <th scope="col">Return</th>
+					  <th scope="col">Buying Power</th>
+            <th scope="col">View</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for portfolio in portfolios %}
+						<tr>
+						    <td>{{ portfolio.title }}</td>
+						    <td>{{ portfolio.user }}</td>
+						    <td>{{ portfolio.created|date:"F j, Y" }}</td>
+						    <td>{{ portfolio.value }}</td>
+						    <td>{{ portfolio.portfolio_return|floatformat:2}}%</td>
+						    <td>{{ portfolio.cash }}</td>
+                <td>
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-light"><a href="{% url 'viewportfolio' portfolio.id %}" class="button-link">View</a></button>
+                  </div>
+                </td>
+						</tr>
+					{% endfor %}
+				</tbody>
+		   </table>
+    </div>
+    *Portfolio returns are updated each time they are viewed
+	</div>
+
+{% endblock %}

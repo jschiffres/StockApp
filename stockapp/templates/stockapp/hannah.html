@@ -1,0 +1,18 @@
+{% extends 'stockapp/base.html' %}
+
+{% block content %}
+
+<h1>HANNAH!!!</h1>
+
+<ul>
+	<li>poop</li>
+	<li>pee</li>
+</ul>
+
+{% if graph %}
+{{ graph|safe }}
+{% else %}
+<p>No graph was provided.</p>
+{% endif %}
+
+{% endblock %}

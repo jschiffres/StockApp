@@ -1,0 +1,91 @@
+{% extends 'stockapp/base.html' %}
+
+{% block content %}
+
+{% load dollarformat %}
+
+      <div class="card">
+        <div class="card-header">
+            <h4 class="my-0 font-weight-normal">{{ info.longName }} : {{ info.symbol }}</h4>
+        </div>
+          <ul class="list-unstyled mt-3 mb-4">
+            <li>Headquaters: {{ info.city }}, {% if info.state %} {{ info.state }},{% endif %} {{ info.country }}</li>
+            <li>Website: <a href="{{ info.website }}">{{ info.website }}</a></li>
+            <li>Sector: {{ info.sector }}</li>
+            <li>Industry: {{ info.industry }}</li>
+            <li>Price: {{ info.ask|dollar_format }}</li>
+            <li>
+                {% if info.dividendRate %}
+                Dividend: ${{ info.dividendRate|floatformat:2 }}
+                {% else %}
+                Dividend N/A
+                {% endif %}
+             </li>
+          {% if user.is_authenticated %}
+          </ul>
+          <form method="POST">
+            {% csrf_token %}
+            <label class="sr-only" for="id_shares">Quantity:</label>
+            <input type="number" name="shares" required id="id_shares" min="1">
+            <label class="sr-only" for="id_portfolio">Portfolio:</label>
+              <select name="portfolio" required id="id_portfolio">
+                {% for portfolio in portfolios %}
+                <option value="{{ portfolio.id }}">{{ portfolio.title }} - {{ portfolio.cash }}</option>
+                {% endfor %}
+              </select>
+            <button type="submit" class="btn btn-primary">Buy</button>
+          </form>
+          {% else %}
+              <li><a href="{% url 'loginuser' %}">Login</a> or <a href="{% url 'signupuser' %}">Signup</a> to pruchase this stock</li>
+          </ul>
+          {% endif %}
+      </div>
+      <div id="chart">
+        <canvas id="line-chart"></canvas>
+      
+      <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+      <script>
+        var config = {
+          type: 'line',
+          data: {
+            datasets: [{
+              data: {{ data|safe }},
+              backgroundColor: [
+                '#DFDAC4'
+              ],
+              label: '{{ info.symbol }}'
+            }],
+            labels: {{ labels|safe }}
+          },
+          options: {
+            responsive: true
+          },
+          options: {
+            title: {
+                display: true,
+                text: '{{ info.shortName }} 1 Year Performance',
+                fontColor: '#DFDAC4',
+                position: 'top'
+            },
+            legend: {
+              display: false
+            }
+          }
+        };
+
+        window.onload = function() {
+          var ctx = document.getElementById('line-chart').getContext('2d');
+          window.myPie = new Chart(ctx, config);
+        };
+
+      </script>
+    </div>
+
+  {% if error %}
+    <div class="error alert alert-danger" role="alert">
+        {{ error }}
+    </div>
+  {% endif %}
+
+	
+{% endblock %}

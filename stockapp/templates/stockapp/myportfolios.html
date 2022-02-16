@@ -1,0 +1,53 @@
+{% extends 'stockapp/base.html' %}
+
+{% block content %}
+
+    <h1 class="text-center">{{ user.username }}'s Portfolios</h1>
+    <br>
+
+    {% if portfolios %} 
+
+    <table class="table table-bordered table-hover table-dark">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Date Created</th>
+          <th scope="col">Starting Value</th>
+          <th scope="col">Return</th>
+          <th scope="col">Buying Power</th>
+          <th scope="col">View/Edit</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for portfolio in portfolios %}
+        <tr>
+            <td>{{ portfolio.title }}</td>
+            <td>{{ portfolio.created|date:"F j, Y" }}</td>
+            <td>{{ portfolio.value }}</td>
+            {% if portfolio.portfolio_return > 0 %}
+              <td class="table-success">{{ portfolio.portfolio_return|floatformat:2 }}%</td>
+            {% elif portfolio.portfolio_return < 0 %}
+              <td class="table-danger">{{ portfolio.portfolio_return|floatformat:2 }}%</td>
+            {% else %}
+              <td class="table-secondary">{{ portfolio.portfolio_return|floatformat:2 }}%</td>
+            {% endif %}
+            <td>{{ portfolio.cash }}</td>
+            <td>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-light"><a href="{% url 'viewportfolio' portfolio.id %}" class="button-link">View</a></button>
+                    <button type="button" class="btn btn-light"><a href="{% url 'editportfolio' portfolio.id %}" class="button-link">Edit</a></button>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+        <div class="text-center">
+            <h2>Looks like you don't have any Portfolios.</h2>
+            <br>
+            <a role="button" class="btn btn-primary" href="{% url 'createportfolio' %}">New Portfolio</a>
+        </div>
+    {% endif %}
+
+{% endblock %}

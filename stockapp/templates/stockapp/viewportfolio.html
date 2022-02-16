@@ -1,0 +1,132 @@
+{% extends 'stockapp/base.html' %}
+
+{% block content %}
+
+	{% load dollarformat %}
+	
+	{% if holdings %}
+
+		{% for port in portfolio %}
+
+		<center><h1>{{ port.title }}</h1>
+
+		Created on {{ port.created }}, funded with {{ port.value|dollar_format }}</center>
+		<hr>
+	<center>
+		<div class="row">
+        	<div class="col-md-4">
+          		<div class="card shadow-sm">
+					<div class="card">
+						<div class="card-header">
+							Buying Power
+						</div>
+						<div class="card-body">
+							<h2>{{ port.cash|dollar_format }}</h2>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+          		<div class="card shadow-sm">
+					<div class="card">
+						<div class="card-header">
+							Current Value
+						</div>
+						<div class="card-body">
+							<h2>{{ port.current_value|dollar_format }}</h2>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+          		<div class="card shadow-sm">
+					<div class="card">
+						<div class="card-header">
+							Portfolio Return
+						</div>
+						<div class="card-body">
+							<h2>{{ port.return|floatformat:2 }}%</h2>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</center>
+
+		{% endfor %}
+	<hr>
+
+		<div class="table-responsive">
+			<table class="table table-bordered table-hover table-dark">
+			    <thead>
+			    	<tr>
+				        <th scope="col">Ticker</th>
+				        <th scope="col">Shares</th>
+				        <th scope="col">Average Price</th>
+				        <th scop="col">Current Price</th>
+				        <th scop="col">Return (%)</th>
+				        {% if request.user == owner %}
+					        <th scop="col">Quantity</th>
+					        <th scop="col">Action</th>
+					    {% endif %}
+			    	</tr>
+			    </thead>
+			    <tbody>
+			    {% for holding in holdings %}
+					<tr>
+						<form method="POST">
+							{% csrf_token %}
+							<td>
+								<input type="text" name="ticker" maxlength="6" required id="id_ticker" value="{{ holding.ticker }}" readonly>
+							</td>
+							<td>{{ holding.shares }}</td>
+							<td>{{ holding.avg_price|dollar_format }}</td>
+
+							
+
+							{% if holding.avg_price < holding.currentprice %}
+							<td class="table-success">{{ holding.currentprice|dollar_format }}</td>
+							{% elif holding.avg_price == holding.currentprice %}
+							<td class="table-secondary">{{ holding.currentprice|dollar_format }}</td>
+							{% else %}
+							<td class="table-danger">{{ holding.currentprice|dollar_format }}</td>
+							{% endif %}
+							<td>{{ holding.return|floatformat:2 }}%</td>
+							{% if request.user == owner %}
+								<td>
+									<input type="number" name="shares" required id="id_shares" min="1" max="{{ holding.shares }}">
+								</td>
+								<td>
+									<button type="submit" class="btn btn-warning">Sell</button>
+								</td>
+							{% endif %}
+						</form>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	
+	{% else %}
+
+		{% for port in portfolio %}
+
+		<h1>{{ port.title }}</h1>
+
+		<h2>Starting Value: {{ port.value|dollar_format }}</h2>
+
+		<h2>Buying Power: {{ port.cash|dollar_format }}</h2>
+
+		<h2>Portfolio Return: {{ port.return|floatformat:2 }}%</h2>
+
+		{% endfor %}
+
+	<h1 class="text-center">No current investments!</h1>
+
+		<form  action="" method="GET">
+	 	<input id="stock_ticker" name="stock_ticker" type="text" placeholder="Search ticker...">
+		</form>
+
+	{% endif %}
+
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'stockapp/base.html' %}
+
+{% block content %}
+
+	{% if error %}
+		<div class="error alert alert-danger" role="alert">
+	    	{{ error }}
+		</div>
+	{% endif %}
+
+	<form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" name="title" class="form-control" id="title" value="{{ portfolio.title }}" required>
+        </div>
+        <br>
+        <div class="btn-group">
+        <button type="submit" class="btn btn-light">Save</button>
+    </form>
+	<form method="POST" action="{% url 'deleteportfolio' portfolio.id %}">
+		{% csrf_token %}
+			<button type="submit" class="btn btn-danger">Delete</button>
+	</form>
+		</div>
+
+{% endblock %} 

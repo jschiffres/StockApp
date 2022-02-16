@@ -1,0 +1,35 @@
+{% extends 'stockapp/base.html' %}
+
+{% block content %}
+
+    <div class="page-name">
+        <h3>Login</h3>
+    </div>
+
+    {% if error %}
+        <div class="error alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" name="username" class="form-control" id="username">
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" name="password" class="form-control" id="password" aria-describedby="passwordHelp">
+            <small id="password1Help" class="form-text text-muted"><a href="#">Forgot password?</small></a>
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+
+    <br>
+
+    <div class="info-text">
+        Need an account? <a href="{% url 'signupuser' %}">Sign up here</a>
+    </div>
+
+{% endblock %}
