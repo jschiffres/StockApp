@@ -285,16 +285,3 @@ def stockpage(request, stock_ticker):
 	except (ValueError, KeyError, TypeError) as e:
 		messages.error(request, "Stock ticker not found")
 		return redirect('home')
-
-def powerbitest(request):
-	return render(request, 'stockapp/powerbitest.html')
-
-
-def hannah(request):
-	tickers = ["AXP","AMGN","AAPL","BA","CAT","CSCO","CVX","GS","HD","HON","IBM","INTC","JNJ","KO","JPM","MCD","MMM","MRK","MSFT","NKE","PG","UNH","CRM","VZ","V","WBA","WMT","DIS","DOW"]
-	stocks = []
-	ask = []
-	for t in tickers:
-		stocks.append(yf.Ticker(t).info['shortName'])
-	print(stocks)
-	return render(request, 'stockapp/hannah.html')
